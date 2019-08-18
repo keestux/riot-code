@@ -345,36 +345,38 @@ function setup() {
     riot_build_h = windowsToPosix(riot_build_h)
   }
 
+  let make_cmd: string = `make BOARD=${project.board} clean ${riot_build_h}`
+
   let riot_build_h_output: shell.ExecOutputReturnValue = shell.exec(
-    `make BOARD=${project.board} clean ${riot_build_h}`,
+    make_cmd,
   )
 
   if (riot_build_h_output.code !== 0) {
     vscode.window.showErrorMessage(
-      `cd ${project.app_dir}; make BOARD=${
-        project.board
-      } clean ${riot_build_h}`,
+      `cd ${project.app_dir}; ${make_cmd}`,
     )
     return
   }
 
+  make_cmd = `make -n QUIET=0 BOARD=${project.board}`;
+
   let make_output = shell.ExecOutputReturnValue = shell.exec(
-    `make -n QUIET=0 BOARD=${project.board}`,
+    make_cmd,
     { silent: true },
   )
 
   if (make_output.code != 0) {
 
+    make_cmd = `make QUIET=0 BOARD=${project.board}`;
     // try again, and for the last time, to run make
     make_output = shell.ExecOutputReturnValue = shell.exec(
-      `make QUIET=0 BOARD=${project.board}`,
+      make_cmd,
       { silent: true },
     )
 
     if (make_output.code != 0) {
-
       vscode.window.showErrorMessage(
-        `cd ${project.app_dir}; make QUIET=0 BOARD=${project.board}`,
+        `cd ${project.app_dir}; ${make_cmd}`,
       )
       return
     }
