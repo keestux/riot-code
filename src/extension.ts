@@ -52,7 +52,7 @@ function windowsToPosix(pth: string) {
 }
 
 export function get_includes(data: string) {
-  let set: Set<string> = new Set()
+  let set: Set<string> = new Set<string>()
   let match: RegExpExecArray | null
 
   let re = /(-I)([^\s]+)+/g
@@ -66,7 +66,7 @@ export function get_includes(data: string) {
 
 function get_defines(riot_build_h_file: string) {
   let match: RegExpExecArray
-  let set = new Set()
+  let set = new Set<string>()
 
   if (/gcc$/.test(project.compiler)) {
     set.add('__GNUC__')
@@ -95,7 +95,7 @@ function get_defines(riot_build_h_file: string) {
 
 function get_system_includes() {
   let match: RegExpExecArray
-  let sys_includes = new Set()
+  let sys_includes = new Set<string>()
 
   const compiler = vscode.workspace.getConfiguration().get('riot.compiler')
 
@@ -296,7 +296,7 @@ interface CppSettings {
 }
 
 function setup() {
-  let includes = new Set()
+  let includes = new Set<string>()
 
   // check compiler
   if (!shell.which(project.compiler)) {
